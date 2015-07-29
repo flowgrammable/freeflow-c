@@ -24,6 +24,11 @@
 #define FP_BAD_PIPELINE_MODULE       9  /* Cannot resolve pipeline symbols. */
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 /* The error type is the same as the result type for the
    the nomg/noproto communication. When the value is
    negative, this indicates an errno error value. */
@@ -67,6 +72,8 @@ fp_get_system_error()
 }
 
 
-
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 #endif
