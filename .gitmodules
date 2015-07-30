@@ -2,10 +2,10 @@
   path = contrib/cppformat
   url = https://github.com/cppformat/cppformat
 [submodule "dev-machine"]
-	path = dev-machine
-	url = git@github.com:flowgrammable/dev-machine
+  path = dev-machine
+  url = git@github.com:flowgrammable/dev-machine
 [submodule "netmap_source"]
-	path = netmap_source
-	url = https://github.com/flowgrammable/netmap.git
-	branch = next
+  path = netmap_source
+  url = https://github.com/flowgrammable/netmap.git
+  branch = next
 
