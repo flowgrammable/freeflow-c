@@ -1,9 +1,9 @@
 [submodule "contrib/cppformat"]
   path = contrib/cppformat
-  url = https://github.com/cppformat/cppformat
+  url = https://github.com/cppformat/cppformat.git
 [submodule "dev-machine"]
   path = dev-machine
-  url = git@github.com:flowgrammable/dev-machine
+  url = https://github.com/flowgrammable/dev-machine.git
 [submodule "contrib/netmap-source"]
 	path = contrib/netmap-source
 	url = https://github.com/flowgrammable/netmap.git
