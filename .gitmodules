@@ -4,3 +4,6 @@
 [submodule "dev-machine"]
   path = dev-machine
   url = git@github.com:flowgrammable/dev-machine
+[submodule "contrib/netmap-source"]
+	path = contrib/netmap-source
+	url = https://github.com/flowgrammable/netmap.git
