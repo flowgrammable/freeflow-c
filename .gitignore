@@ -26,6 +26,3 @@
 *.exe
 *.out
 *.app
-
-# Development Environment
-dev-machine/
