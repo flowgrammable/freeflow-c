@@ -40,6 +40,9 @@ endif()
 set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Wall")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pedantic -Wall")
 
+# Configure contrib source folder.
+set(FREEFLOW_CONTRIB_SOURCE_DIR "${CMAKE_SOURCE_DIR}/contrib")
+
 
 # Configure pcap use.
 if(FREEFLOW_USE_PCAP)
@@ -52,7 +55,7 @@ endif()
 # By default, we're going to point to the Git submodule
 # that is the contrib source directory.
 #
-set(NETMAP_SOURCE_DIR ${CMAKE_SOURCE_DIR}/contrib/netmap_source)
+set(NETMAP_SOURCE_DIR ${FREEFLOW_CONTRIB_SOURCE_DIR}/netmap_source)
 if(FREEFLOW_USE_NETMAP)
   find_path(NETMAP_INCLUDE_DIR "net/netmap.h" PATHS ${NETMAP_SOURCE_DIR}/sys)
   if(NOT NETMAP_INCLUDE_DIR)
@@ -90,7 +93,7 @@ if(FREEFLOW_USE_NADK)
 endif()
 
 
-# Allow includes to find from headers form this dir.
+# Allow includes to find from headers from this dir.
 include_directories(.)
 
 
@@ -99,7 +102,6 @@ add_subdirectory(freeflow)
 
 
 # The freeflow components
-add_subdirectory(dpmp)
 add_subdirectory(flowpath)
-add_subdirectory(flowmg)
+add_subdirectory(flowmgr)
 add_subdirectory(flowctl)
