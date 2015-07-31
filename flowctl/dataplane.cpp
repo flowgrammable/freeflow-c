@@ -67,7 +67,7 @@ resolve_data_plane_type(char const* type, std::string& result)
 //
 //    add <dp-name> <dp-type>
 //
-// Sends the validated command to nomg as it is represented 
+// Sends the validated command to flowmgr as it is represented 
 // in the initial arguments.
 //
 // FIXME: Do we need to fix the dataplane type so that it

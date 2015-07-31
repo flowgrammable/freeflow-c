@@ -54,8 +54,8 @@ using Path_list = std::vector<std::string>;
 // TODO: Establish reasonable defaults for the search path, etc.
 struct Config
 {
-  // The path to the noctl socket.
-  std::string socket  = "/tmp/noctl-socket";
+  // The path to the flowctl socket.
+  std::string socket  = "/tmp/flowctl-socket";
 
   // The path s
   Path_list   module_path;  // Search path for pipeline modules

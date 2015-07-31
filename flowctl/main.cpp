@@ -21,7 +21,7 @@ Config cfg;
 //                           Basic commands
 
 
-// Ping the nomg server and wait for a result.
+// Ping the flowmgr server and wait for a result.
 //
 //    ping
 //
@@ -140,7 +140,7 @@ namespace
 //
 // TODO: We should actually be loading DLLs to extend the set
 // of commands for specific applications. For example, we 
-// might enable `noctl br run dp1` or `noctl route add ...`
+// might enable `flowctl br run dp1` or `flowctl route add ...`
 // if these applications are installed on the switch.
 Command_map commands {
   {"help",    help_command},
@@ -166,14 +166,14 @@ main(int argc, char** argv)
 
   if (argc == 1) {
     print(std::cerr, "error: no commands given\n");
-    print(std::cerr, "type 'noctl help' for a list of commands\n");
+    print(std::cerr, "type 'flowctl help' for a list of commands\n");
     return -1;
   }
 
   auto iter = commands.find(argv[1]);
   if (iter == commands.end()) {
     print(std::cerr, "error: no command named '{}'\n", argv[1]);
-    print(std::cerr, "type 'noctl help' for a list of commands\n");
+    print(std::cerr, "type 'flowctl help' for a list of commands\n");
     return -1;
   }
   Command cmd = iter->second;

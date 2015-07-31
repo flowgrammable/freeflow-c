@@ -83,7 +83,7 @@ execute_command(Command_map& map, int argc, char** argv)
 }
 
 
-// Send a command to nomg by connecting, transmitting and
+// Send a command to flowmgr by connecting, transmitting and
 // closing. Also, interpret any result.
 //
 // Note that this blocks until we receive the entire
