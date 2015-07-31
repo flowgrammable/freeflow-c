@@ -1,7 +1,7 @@
 
 # Flowmgr
 
-Flowmgr is the [flowpath](https://github.com/flowgrammable/freeflow/flowpath) data plane instance manager. Users are able to access flowpath data plane instances using a [Flowmgr Client Interface](#client-interface).
+Flowmgr is the [flowpath](https://github.com/flowgrammable/freeflow/blob/master/flowpath) data plane instance manager. Users are able to access flowpath data plane instances using a [Flowmgr Client Interface](#client-interface).
 
 
 ## Client Interaces
@@ -10,7 +10,7 @@ Flowmgr is intended to allow multiple forms of communication for configuration a
 
 ### CLI
 
-[Flowctl](https://github.com/flowgrammable/freeflow/flowctl) allows a user to manipulate data plane instances through flowmgr from the command line using Unix Sockets and JSON style messages. See the flowctl project page for additional information.
+[Flowctl](https://github.com/flowgrammable/freeflow/blob/master/flowctl) allows a user to manipulate data plane instances through flowmgr from the command line using Unix Sockets and JSON style messages. See the [flowctl](https://github.com/flowgrammable/freeflow/blob/master/flowctl) project page for additional information.
 
 
 ### Flowsim
@@ -24,9 +24,9 @@ Flowmgrs main purpose is to configure and manage flowpath data plane instances. 
 
 ### Management
 
-Since there could possibly be multiple data plane instances running in [flowpath](https://github.com/flowgrammable/freeflow/flowpath) some back end store is needed. Flowmgr uses a simple chained hash table to keep track of data plane instances and their labels. 
+Since there could possibly be multiple data plane instances running in [flowpath](https://github.com/flowgrammable/freeflow/blob/master/flowpath) some back end store is needed. Flowmgr uses a simple chained hash table to keep track of data plane instances and their labels. 
 
 
 ### Communication
 
-Flowmgr and [flowpath](https://github.com/flowgrammable/freeflow/flowpath) will also communicate over sockets but use a closed binary interface for relaying messages. The messages map to commands available to the manager for any data plan instance.
+Flowmgr and [flowpath](https://github.com/flowgrammable/freeflow/blob/master/flowpath) will also communicate over sockets but use a closed binary interface for relaying messages. The messages map to commands available to the manager for any data plan instance.
