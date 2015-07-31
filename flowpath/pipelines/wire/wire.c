@@ -1,10 +1,10 @@
 
-#include "dp/dataplane.h"
-#include "dp/pipeline.h"
-#include "dp/port.h"
-#include "dp/packet.h"
+#include "flowpath/dataplane.h"
+#include "flowpath/pipeline.h"
+#include "flowpath/port.h"
+#include "flowpath/packet.h"
 
-#include "dpmp/dpmp.h"
+#include "flowpath/proto.h"
 
 #include <stdio.h>
 
