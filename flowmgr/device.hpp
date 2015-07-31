@@ -19,9 +19,9 @@
 
 #include "freeflow/socket.hpp"
 
-namespace nomg
+namespace flowmgr
 {
-// The nomg device module. This mostly wraps the C ifaddrs
+// The flowmgr device module. This mostly wraps the C ifaddrs
 // device interface to simplify its usage. Provides an iterator
 // to access the list of network devices in the system.
 //
@@ -252,7 +252,7 @@ list::end() -> store_type::iterator
 } // end namespace device
 
 
-} // end namespace nomg
+} // end namespace flowmgr
 
 
 #endif

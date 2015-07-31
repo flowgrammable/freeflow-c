@@ -106,7 +106,7 @@ request(Io_handler& io, char const* buf, int len)
     send_error(io, e.what());
   }
 
-  print("[nomg] got request: {}\n", *json);
+  print("[flowmgr] got request: {}\n", *json);
 
   // Handle the command.
   if (json)

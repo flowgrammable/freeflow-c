@@ -32,16 +32,16 @@ struct Config
 // parser relies (through a 3rd party library) on std::regex,
 // which is broken in GCC-4.8.
 #if 0
-// Create the command line options for the nomg server.
+// Create the command line options for the flowmgr server.
 cli::Options
 make_options()
 {
-  cli::Options options("nomg");
+  cli::Options options("flowmgr");
   options.add_options()
-    ("noctl-socket",
-        "path to the noctl server socket", cli::value<std::string>())
-    ("noproto-socket",
-        "path to the noproto server port", cli::value<std::string>());
+    ("flowctl-socket",
+        "path to the flowctl server socket", cli::value<std::string>())
+    ("flowpath-socket",
+        "path to the flowpath server port", cli::value<std::string>());
   return options;
 }
 
@@ -54,13 +54,13 @@ parse_command_line(Config& config, int argc, char** argv)
   try {
     options.parse(argc, argv);
 
-    // Get the noctl socket path.
-    if (options.count("noctl-socket"))
-      config.noctl_socket = options["noctl-socket"].as<std::string>();
+    // Get the flowctl socket path.
+    if (options.count("flowctl-socket"))
+      config.flowctl_socket = options["flowctl-socket"].as<std::string>();
 
-    // Get the noproto socket path.
-    if (options.count("noproto-socket"))
-      config.noproto_socket = options["noproto-socket"].as<std::string>();
+    // Get the flowpath socket path.
+    if (options.count("flowpath-socket"))
+      config.flowpath_socket = options["flowpath-socket"].as<std::string>();
 
   } catch (std::exception& err) {
     std::cerr << err.what() << '\n';

@@ -8,10 +8,10 @@
 
 // This module is responsible for the handling of requests from
 // maanagement clients. Every request is analyzed and forwarded
-// to a noproto instance.
+// to a flowpath instance.
 //
 // See the reply module for the framwork for handling responses
-// from noproto.
+// from flowpath.
 
 bool request(ff::Io_handler&, char const*, int);
 

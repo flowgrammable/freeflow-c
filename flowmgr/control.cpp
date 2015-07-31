@@ -27,7 +27,7 @@ using namespace ff;
 namespace
 {
 
-// The global noctl channel.
+// The global flowctl channel.
 Control_channel* ctrl_;
 
 } // namespace
@@ -37,9 +37,9 @@ Control_server::Control_server(std::string const& path)
   : Io_handler(ff::server_socket(Unix_socket_address(path)))
 {
   if (fd() < 0)
-    throw std::system_error(errno, std::system_category(), "noctl server");
+    throw std::system_error(errno, std::system_category(), "flowctl server");
 
-  std::cout << "[flowmgr] accepting noctl connections at '" << path << "'\n";
+  std::cout << "[flowmgr] accepting flowctl connections at '" << path << "'\n";
 }
 
 
@@ -69,17 +69,17 @@ Control_server::on_input()
   //
   // TODO: Accept multiple connections
   if (ctrl_) {
-    std::cerr << "[flowmgr] noctl already accepted\n";
+    std::cerr << "[flowmgr] flowctl already accepted\n";
     return false;
   }
-  std::cerr << "[flowmgr] accepting noctl client\n";
+  std::cerr << "[flowmgr] accepting flowctl client\n";
 
-  // Create the handler for this noctl channel and
+  // Create the handler for this flowctl channel and
   // register it.
   ctrl_ = new Control_channel(sd);
   register_handler(ctrl_);
 
-  // Require that noproto is running.
+  // Require that flowpath is running.
   require_switch(*ctrl_);
 
   return true;
@@ -89,7 +89,7 @@ Control_server::on_input()
 // -------------------------------------------------------------------------- //
 //                              Channel
 
-// Returns the current noctl channel.
+// Returns the current flowctl channel.
 Control_channel*
 control_channel()
 {
@@ -99,13 +99,13 @@ control_channel()
 
 Control_channel::~Control_channel()
 {
-  std::cout << "[flowmgr] closing noctl\n";
+  std::cout << "[flowmgr] closing flowctl\n";
   close(fd());
   ctrl_ = nullptr;
 }
 
 
-// Read and execute the command sent by noctl.
+// Read and execute the command sent by flowctl.
 bool
 Control_channel::on_input()
 {

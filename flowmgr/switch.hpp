@@ -15,7 +15,7 @@
 
 
 // The channel class encapsulates the connection from
-// the noctl command line tool and is responsible for
+// the flowctl command line tool and is responsible for
 // processing its messages. 
 struct Switch_server : ff::Io_handler
 {

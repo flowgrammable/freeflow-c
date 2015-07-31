@@ -31,7 +31,7 @@ Switch_server::Switch_server(std::string const& path)
   if (fd() < 0) {
     throw std::system_error(errno, std::system_category(), "switch server");
   }
-  std::cerr << "[nomg] accepting switch connections at '" << path << "'\n";
+  std::cerr << "[flowmgr] accepting switch connections at '" << path << "'\n";
 }
 
 
@@ -60,10 +60,10 @@ Switch_server::on_input()
   // We've already connected a switch instance. Just
   // allow this to terminate.
   if (switch_) {
-    std::cerr << "[nomg] switch client already connected\n";
+    std::cerr << "[flowmgr] switch client already connected\n";
     return false;
   }
-  std::cerr << "[nomg] accept switch\n";
+  std::cerr << "[flowmgr] accept switch\n";
 
   switch_ = new Switch_channel(sd);
   register_handler(switch_);
@@ -88,20 +88,20 @@ switch_channel()
 bool
 Switch_channel::on_input()
 {
-  std::cerr << "[nomg] message from switch\n";
+  std::cerr << "[flowmgr] message from switch\n";
 
   // Read the message.
   char buf[FP_MESSAGE_LEN];
   int result = recv(fd(), buf, FP_MESSAGE_LEN, 0);
-  std::cerr << "[nomg] " << format("read {} bytes from switch\n", result);
+  std::cerr << "[flowmgr] " << format("read {} bytes from switch\n", result);
   if (result <= 0) {
     if (result < 0)
       std::cerr << std::strerror(errno) << '\n';
     return false;
   }
 
-  Control_channel* noctl = control_channel();
-  noctl->on_reply((fp_reply*)buf);
+  Control_channel* flowctl = control_channel();
+  flowctl->on_reply((fp_reply*)buf);
   return true;
 }
 
@@ -112,10 +112,10 @@ Switch_channel::~Switch_channel()
   switch_ = nullptr;
 
   // If this is going down, be sure to take down a
-  // connected noctl client, so we don't leave it hanging.
-  if (Control_channel* noctl = control_channel()) {
-    send(noctl->fd(), "error: switch shutdown unexpectedly");
-    close(noctl->fd());
+  // connected flowctl client, so we don't leave it hanging.
+  if (Control_channel* flowctl = control_channel()) {
+    send(flowctl->fd(), "error: switch shutdown unexpectedly");
+    close(flowctl->fd());
   }
 }
 
@@ -125,7 +125,7 @@ Switch_channel::~Switch_channel()
 bool
 Switch_channel::on_request(fp_request const* req)
 {
-  std::cerr << "[nomg] sending message to switch\n";
+  std::cerr << "[flowmgr] sending message to switch\n";
   int result = send(fd(), req, FP_MESSAGE_LEN, 0);  
   if (result < 0) {
     std::cerr << std::strerror(errno) << '\n';

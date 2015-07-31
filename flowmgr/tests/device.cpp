@@ -42,7 +42,7 @@ main(int argc, char** argv)
 {
   #if 0
   // The device list.
-  nomg::device::list lst;
+  flowmgr::device::list lst;
   for (auto iter = lst.begin(); iter != lst.end(); ++iter){
     // Report device and address family names.
     fprintf(stderr, "%-8s\n", iter->name());
