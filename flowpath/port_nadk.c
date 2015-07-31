@@ -389,9 +389,9 @@ fp_nadk_open(short p)
 {
   //static struct fp_nadk_resources* rc = NULL;
 
-  /* Initialize nadk runtime if haven't already for this noproto process:
-   * - TODO: this may just need to return an error as nomgr should have already
-   *   queried noproto for available ports.
+  /* Initialize nadk runtime if haven't already for this flowpath process:
+   * - TODO: this may just need to return an error as flowmgr should have already
+   *   queried flowpath for available ports.
    */
   if (fp_nadk_state == NADK_UNINIT) {
     fp_nadk_init("dprc.6");
@@ -461,7 +461,7 @@ fp_nadk_recv_batch(struct fp_device* device)
   if (unlikely(ret > NADK_FP_RX_BUDGET))
     NADK_ERR(APP1, "Somehow recieved more packets than alloted budget...");
 
-  /* Allocate a noproto packet. */
+  /* Allocate a flowpath packet. */
   for (int i = 0; i < ret; i++) {
     rx_batch[i] = fp_packet_create(pkt_buf[i]->data, pkt_buf[i]->length,
                                    pkt_buf[i]->timestamp,
@@ -487,7 +487,7 @@ fp_nadk_recv_single(struct fp_device* device)
   if (unlikely(ret > 1))
     NADK_ERR(APP1, "FATAL ERROR: somehow recieved more packets than alloted budget...");
 
-  /* Allocate a noproto packet. */
+  /* Allocate a flowpath packet. */
   packet = fp_packet_create(pkt_buf[0]->data, pkt_buf[0]->length,
                             pkt_buf[0]->timestamp,
                             pkt_buf[0], FP_BUF_NADK);
@@ -636,7 +636,7 @@ fp_nadk_drop(struct fp_device* device, struct fp_packet* pkt)
 }
 
 
-/* NADK loopback test (bypasses noproto's send/recv functions).
+/* NADK loopback test (bypasses flowpath's send/recv functions).
  * - All packets recieved on device will be reflected back.
  * - Used to test max PPS through interface.
  */
@@ -668,7 +668,7 @@ fp_nadk_loopback(struct fp_device* device)
 }
 
 
-/* NADK loopback test (bypasses noproto's send/recv functions).
+/* NADK loopback test (bypasses flowpath's send/recv functions).
  * - All packets recieved on src will be reflected back on dst.
  * - Used to test max PPS through interface.
  */

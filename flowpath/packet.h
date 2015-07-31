@@ -18,7 +18,7 @@ typedef enum {FP_BUF_NADK, FP_BUF_NETMAP, FP_BUF_ALLOC} fp_buf_t;
 
    The packet structure is effectively a reference to a buffer
    maintained by an underlying interface. Most interfaces with
-   which noproto is designed to work expose mechanisms for
+   which flowpath is designed to work expose mechanisms for
    avoiding copies when a packet is received. The port module
    that creates the packet is fully responsible for the
    management of its memory.

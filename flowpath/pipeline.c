@@ -26,7 +26,7 @@ struct fp_pipeline*
 fp_pipeline_load(struct fp_dataplane* dp, char const* dll, fp_error_t* err)
 {
   assert(dll != NULL);
-  fprintf(stderr, "[noproto] loading pipeline '%s'\n", dll);
+  fprintf(stderr, "[flowpath] loading pipeline '%s'\n", dll);
 
   /* Initialize the pipeline. */
   struct fp_pipeline* p = fp_allocate(struct fp_pipeline);
@@ -39,7 +39,7 @@ fp_pipeline_load(struct fp_dataplane* dp, char const* dll, fp_error_t* err)
     fp_deallocate(p);
     return NULL;
   }
-  fprintf(stderr, "[noproto] pipeline module loaded\n");
+  fprintf(stderr, "[flowpath] pipeline module loaded\n");
 
   /* Find the pipeline constructor. */
   pipeline_ctor init = dlsym(p->pipeline_module, "pipeline_init");
@@ -48,7 +48,7 @@ fp_pipeline_load(struct fp_dataplane* dp, char const* dll, fp_error_t* err)
     delete_pipeline(p);
     return NULL;
   }
-  fprintf(stderr, "[noproto] resolved pipeline construcor\n");
+  fprintf(stderr, "[flowpath] resolved pipeline construcor\n");
 
   /* Instantiate the pipeline. */
   *err = init(p);
@@ -60,7 +60,7 @@ fp_pipeline_load(struct fp_dataplane* dp, char const* dll, fp_error_t* err)
   dp->pipeline = p;
 
   /* Load pipeline resources. */
-  fprintf(stderr, "[noproto] initialize pipeline\n");
+  fprintf(stderr, "[flowpath] initialize pipeline\n");
   *err = p->load(dp);
   if (*err != FP_OK) {
     delete_pipeline(p);

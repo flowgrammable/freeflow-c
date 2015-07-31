@@ -63,9 +63,7 @@ extern "C" {
 #define FP_TABLE_SET      34
 
 
-/* The kinds of result requests. 
-
-   FIXME: Move all of this into noproto. */
+/* The kinds of result requests. */
 #define FP_SUCCESS                   0
 #define FP_FAILURE                   1  /* Unspcified error. */
 #define FP_BAD_REQUEST               2  /* Request with wrong type. */

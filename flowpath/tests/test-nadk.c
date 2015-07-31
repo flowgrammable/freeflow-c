@@ -4,7 +4,7 @@
 #include "port.h"
 #include "port_nadk.h"
 
-#include "dpmp/dpmp.h"
+#include "proto.h"
 
 #include <stdio.h>
 #include <signal.h>
@@ -12,12 +12,12 @@
 typedef enum {TEST_REFLECT=0, TEST_XREFLECT=1,
               TEST_LOOPBACK=2, TEST_XLOOPBACK=3,
               TEST_DATAPLANE=4} test_type_t;
-static inline void reflect_test(struct np_port*, struct np_port*);
-static inline void xreflect_test(struct np_port*, struct np_port*);
-static inline void loopback_test(struct np_port*, struct np_port*);
-static inline void xloopback_test(struct np_port*, struct np_port*);
-static inline void dataplane_test(struct np_dataplane*,
-                                  struct np_port*, struct np_port*);
+static inline void reflect_test(struct fp_port*, struct fp_port*);
+static inline void xreflect_test(struct fp_port*, struct fp_port*);
+static inline void loopback_test(struct fp_port*, struct fp_port*);
+static inline void xloopback_test(struct fp_port*, struct fp_port*);
+static inline void dataplane_test(struct fp_dataplane*,
+                                  struct fp_port*, struct fp_port*);
 
 static volatile sig_atomic_t received_sigint;
 /*===== sigproc =====*/
@@ -95,34 +95,34 @@ static void install_signal_handler(void)
 
 
 /* Create a NADK port. */
-struct np_port* 
+struct fp_port* 
 make_port(short p)
 {
-//  np_error_t err = 0;
-  struct np_device* dev = np_nadk_open(p);
+//  fp_error_t err = 0;
+  struct fp_device* dev = fp_nadk_open(p);
   if (dev == NULL) {
-//    fprintf(stderr, "error: %s\n", np_strerror(err));
+//    fprintf(stderr, "error: %s\n", fp_strerror(err));
     return NULL;
   }
-  struct np_port* port = np_port_create(dev);
+  struct fp_port* port = fp_port_create(dev);
   return port;
 }
 
 
 /* Create a NADK port and add it ot the data plane. Returns the port. */
-struct np_port*
-add_port(struct np_dataplane* dp, short p)
+struct fp_port*
+add_port(struct fp_dataplane* dp, short p)
 {
   /* Make the port. */
-  struct np_port* port = make_port(p);
+  struct fp_port* port = make_port(p);
   if (!port)
     return NULL;
 
   /* Add the port ot the data plane. */
-  np_error_t err;
-  np_dataplane_add_port(dp, port, &err);
-  if (np_error(err)) {
-    fprintf(stderr, "%s\n", np_strerror(err));
+  fp_error_t err;
+  fp_dataplane_add_port(dp, port, &err);
+  if (fp_error(err)) {
+    fprintf(stderr, "%s\n", fp_strerror(err));
     return NULL;
   }
 
@@ -152,29 +152,29 @@ main(int argc, char** argv)
   /* Asynchronous signals that result in attempted graceful exit */
   install_signal_handler();
 
-  np_error_t err;
-  struct np_dataplane* dp = np_dataplane_create(name, path, &err);
-  if (np_error(err)) {
+  fp_error_t err;
+  struct fp_dataplane* dp = fp_dataplane_create(name, path, &err);
+  if (fp_error(err)) {
     fprintf(stderr, "error: %s\n", dpmp_strerror(err));
     return -1;
   }
 
   /* Hack to initialize NADK framework with passed-in DPRC */
-  np_nadk_init(dprc);
+  fp_nadk_init(dprc);
 
   /* Add ports to the dataplane. */
-  struct np_port* port1 = add_port(dp, 0);
+  struct fp_port* port1 = add_port(dp, 0);
   if (!port1)
     return -1;
-  struct np_port* port2 = add_port(dp, 1);
+  struct fp_port* port2 = add_port(dp, 1);
   if (!port2)
     return -1;
 
   /* Start the data plane. */
   bool ok = true;
-  err = np_dataplane_start(dp);
-  if (np_error(err)) {
-    fprintf(stderr, "error: %s\n", np_strerror(err));
+  err = fp_dataplane_start(dp);
+  if (fp_error(err)) {
+    fprintf(stderr, "error: %s\n", fp_strerror(err));
     ok = false;
   }
 
@@ -208,14 +208,14 @@ main(int argc, char** argv)
   printf("Broke out of processing loop\n");
   
   /* Stop the data plane. */
-  err = np_dataplane_stop(dp);
-  if (np_error(err)) {
-    fprintf(stderr, "error: %s\n", np_strerror(err));
+  err = fp_dataplane_stop(dp);
+  if (fp_error(err)) {
+    fprintf(stderr, "error: %s\n", fp_strerror(err));
     ok = false;
   }
 
   /* Clean up the data plane. */
-  np_dataplane_delete(dp, &err);
+  fp_dataplane_delete(dp, &err);
 
   return ok ? 0 : -1;
 }
@@ -224,16 +224,16 @@ main(int argc, char** argv)
 /* Reflect test: all packets recieved on an interfaced are reflected back
  *  on the same interface. */
 static inline void
-reflect_test(struct np_port* port1, struct np_port* port2) {
-  struct np_packet* pkt;
-  pkt = np_port_recv_packet(port1);
+reflect_test(struct fp_port* port1, struct fp_port* port2) {
+  struct fp_packet* pkt;
+  pkt = fp_port_recv_packet(port1);
   if (pkt) {
-    np_port_send_packet(port1, pkt);
+    fp_port_send_packet(port1, pkt);
   }
 
-  pkt = np_port_recv_packet(port2);
+  pkt = fp_port_recv_packet(port2);
   if (pkt) {
-    np_port_send_packet(port2, pkt);
+    fp_port_send_packet(port2, pkt);
   }
 }
 
@@ -244,66 +244,66 @@ reflect_test(struct np_port* port1, struct np_port* port2) {
  *   Reflect test due to swapping mbufs between ports.
  */
 static inline void
-xreflect_test(struct np_port* port1, struct np_port* port2) {
-  struct np_packet* pkt;
-  pkt = np_port_recv_packet(port1);
+xreflect_test(struct fp_port* port1, struct fp_port* port2) {
+  struct fp_packet* pkt;
+  pkt = fp_port_recv_packet(port1);
   if (pkt) {
-    np_port_send_packet(port2, pkt);
+    fp_port_send_packet(port2, pkt);
   }
 
-  pkt = np_port_recv_packet(port2);
+  pkt = fp_port_recv_packet(port2);
   if (pkt) {
-    np_port_send_packet(port1, pkt);
+    fp_port_send_packet(port1, pkt);
   }
 }
 
 
 /* Loopback test: all packets recieved on an interface are reflected back
  *  on the same interface.
- * - This does not use the noproto ring or packet structures and will be
+ * - This does not use the flowpath ring or packet structures and will be
  *   the best case senario.
  */
 static inline void
-loopback_test(struct np_port* port1, struct np_port* port2) {
-  np_nadk_loopback(port1->device);
-  np_nadk_loopback(port2->device);
+loopback_test(struct fp_port* port1, struct fp_port* port2) {
+  fp_nadk_loopback(port1->device);
+  fp_nadk_loopback(port2->device);
 }
 
 
 /* XLoopback test: all packets recieved on an interface are reflected back
  *  on the other interface.
- * - This does not use the noproto ring or packet structures and will be
+ * - This does not use the flowpath ring or packet structures and will be
  *   the best case senario.
  * - This will also potentially incur a higher penalty compared to the
  *   Loopback test due to swapping mbufs between ports.
  */
 static inline void
-xloopback_test(struct np_port* port1, struct np_port* port2) {
-  np_nadk_xloopback(port1->device, port2->device);
-  np_nadk_xloopback(port2->device, port1->device);
+xloopback_test(struct fp_port* port1, struct fp_port* port2) {
+  fp_nadk_xloopback(port1->device, port2->device);
+  fp_nadk_xloopback(port2->device, port1->device);
 }
 
 
 /* Dataplane test: all packets recieved on an interface are reflected back
  *  on the same interface.
- * - This does not use the noproto ring or packet structures and will be
+ * - This does not use the flowpath ring or packet structures and will be
  *   the best case senario.
  */
 static inline void
-dataplane_test(struct np_dataplane* dp,
-               struct np_port* port1, struct np_port* port2) {
-  struct np_packet* pkt;
+dataplane_test(struct fp_dataplane* dp,
+               struct fp_port* port1, struct fp_port* port2) {
+  struct fp_packet* pkt;
   // Process any packets from Port 1:
-  struct np_arrival arrival1 = {port1->id, port1->id, 0};
-  pkt = np_port_recv_packet(port1);
+  struct fp_arrival arrival1 = {port1->id, port1->id, 0};
+  pkt = fp_port_recv_packet(port1);
   if (pkt) {
     dp->pipeline->insert(dp, pkt, arrival1);
     // TODO: was pkt sucessfully deleted?
   }
 
   // Process any packets from Port 2:
-  struct np_arrival arrival2 = {port2->id, port2->id, 0};
-  pkt = np_port_recv_packet(port2);
+  struct fp_arrival arrival2 = {port2->id, port2->id, 0};
+  pkt = fp_port_recv_packet(port2);
   if (pkt) {
     dp->pipeline->insert(dp, pkt, arrival2);
     // TODO: was pkt sucessfully deleted?

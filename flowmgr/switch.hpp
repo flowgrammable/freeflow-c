@@ -31,7 +31,7 @@ struct Switch_server : ff::Io_handler
 //
 // TODO: How many switch channels should we support?
 // Initially, we should have only one switch service
-// attached to a nomg.
+// attached to a flowmgr.
 struct Switch_channel : ff::Io_handler
 {
   Switch_channel(int f)

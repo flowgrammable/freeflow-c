@@ -53,7 +53,7 @@ fp_capture_read(void* device)
   dst = (unsigned char*)malloc(pcap->header.len);
   memcpy(dst, src, pcap->header.len);
 
-  /* Allocate a noproto packet. */
+  /* Allocate a flowpath packet. */
   packet = fp_make_packet(dst, pcap->header.len);
   return packet;
 }

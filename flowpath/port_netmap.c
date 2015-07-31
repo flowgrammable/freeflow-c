@@ -65,11 +65,11 @@ fp_netmap_recv(struct fp_device* device)
   dst = (unsigned char*)malloc(dev->header.len);
   memcpy(dst, src, dev->header.len);
 
-  /* Allocate a noproto packet. */
+  /* Allocate a flowpath packet. */
   /* TODO: replace dev_handle(NULL) with netmap buffer */
   /* TODO: retrieve timestamp from ring */
   packet = fp_packet_create(dst, dev->header.len, 0
-                            NULL, NP_BUF_NETMAP);
+                            NULL, FP_BUF_NETMAP);
   return packet;
 }
 

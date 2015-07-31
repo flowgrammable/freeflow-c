@@ -9,7 +9,7 @@
    corresponds to a kernel net device. In user space,
    a port can be constructed to represent virtually any
    kind of device (e.g., a pcap file). In other words, a
-   noproto port is simply an abtstraction that provides
+   flowpath port is simply an abtstraction that provides
    some model of the underlying port object.
 
    Note that ports are not inherently responsible for sending

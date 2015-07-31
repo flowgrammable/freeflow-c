@@ -7,7 +7,7 @@
 # A helper macro for adding pipeline targets.
 macro(add_pipeline target)
   add_library(${target} SHARED ${ARGN})
-  target_link_libraries(${target} noproto-core)
+  target_link_libraries(${target} freeflow-core)
 endmacro()
 
 

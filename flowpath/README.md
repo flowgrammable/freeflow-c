@@ -10,7 +10,7 @@ enabled, and netmap is not.
 
 Configuration can be changed using ccmake or the CMake GUI. Both
 pcap and netmap builds can be enabled/disabled in the configuration
-via the NOPROTO_USE_PCAP and NOPROTO_USE_NETMAP options. If netmap 
+via the FLOWPATH_USE_PCAP and FLOWPATH_USE_NETMAP options. If netmap 
 is installed in a non-standard location, you should explicitly set 
 its install path in the NETMAP_SOURCE_DIR variable.
 
@@ -23,13 +23,13 @@ Configuration and building is done in the usual way:
 
 ## Overview
 
-The noproto data plane defines a reconfigurable and programmable
+The flowpath data plane defines a reconfigurable and programmable
 packet processing pipeline. 
 
 The project currently builds two artifacts:
 
-- libnoproto implements the pipeline
-- noproto-sim is a program that defines a simple pcap -> stdout
+- libflowpath implements the pipeline
+- flowpath-sim is a program that defines a simple pcap -> stdout
   pipeline that writes prints the size of each packet in
   the program.
 
@@ -38,13 +38,13 @@ your search paths.
 
 ## Pipeline simulator
 
-The noproto-sim program configures a simple virtual data plane
+The flowpath-sim program configures a simple virtual data plane
 that connects a pcap input port to a simple debugging port.
 Note that both ports are virtual ports.
 
 Running the program is simple:
 
-    noproto-sim input.pcap
+    flowpath-sim input.pcap
 
 This queues each packet in the input file and runs it through
 the packet processing pipeline.

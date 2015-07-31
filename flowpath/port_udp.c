@@ -203,7 +203,7 @@ fp_udp_recv(struct fp_device* device)
   unsigned char* data = fp_allocate_n(unsigned char, bytes);
   memcpy(data, buf, bytes);
 
-  /* Allocate a noproto packet. */
+  /* Allocate a flowpath packet. */
   /* TODO: set timestamp */
   return fp_packet_create(data, bytes, 0, NULL, FP_BUF_ALLOC);
 }

@@ -17,21 +17,21 @@
 #include <sys/un.h>
 
 
-/* The file for communicating with nomg. */
+/* The file for communicating with flowmgr. */
 static int mgr_;
 
 
 /* FIXME: Make this configurable. */
-static const char* mgr_socket_ = "/tmp/noproto-socket";
+static const char* mgr_socket_ = "/tmp/flowpath-socket";
 
 
-/* Open a connection to the nomg manager channel. Returns
+/* Open a connection to the flowmgr manager channel. Returns
    a file descriptor for the connected manager, or -1
    if the connection failed. */
 int 
 fp_mgr_open()
 {
-  /* Initialize the nomg connection. */
+  /* Initialize the flowmgr connection. */
   mgr_ = socket(AF_UNIX, SOCK_STREAM, 0);
   if (mgr_ < 0) {
     perror("fp_mgr_open/socket");
@@ -50,17 +50,17 @@ fp_mgr_open()
     return -1;
   }
 
-  fprintf(stderr, "[noproto] connected to nomg\n");
+  fprintf(stderr, "[flowpath] connected to flowmgr\n");
 
   return mgr_;
 }
 
 
-/* Close the nomg channel. */
+/* Close the flowmgr channel. */
 int
 fp_mgr_close()
 {
-  fprintf(stderr, "[noproto] disconnecting from nomg\n");
+  fprintf(stderr, "[flowpath] disconnecting from flowmgr\n");
   return close(mgr_);
 }
 
@@ -69,7 +69,7 @@ fp_mgr_close()
 static int
 fp_on_dataplane_add(struct fp_request const* req, struct fp_reply* rep)
 {
-  fprintf(stderr, "[noproto] add dataplane\n");
+  fprintf(stderr, "[flowpath] add dataplane\n");
 
   struct fp_dataplane_add_arguments const* args = 
     (struct fp_dataplane_add_arguments const*)req->data;
@@ -88,7 +88,7 @@ fp_on_dataplane_add(struct fp_request const* req, struct fp_reply* rep)
 static int
 fp_on_dataplane_del(struct fp_request const* req, struct fp_reply* rep)
 {
-  fprintf(stderr, "[noproto] delete dataplane\n");
+  fprintf(stderr, "[flowpath] delete dataplane\n");
 
   struct fp_dataplane_del_arguments const* args = 
     (struct fp_dataplane_del_arguments const*)req->data;
@@ -110,7 +110,7 @@ fp_on_port_add(struct fp_request const* req, struct fp_reply* rep)
 {
   // struct fp_port* port = fp_netmap_open(msg->device, msg->id);
   // fp_dataplane_add_port(port);
-  fprintf(stderr, "[noproto] add port\n");
+  fprintf(stderr, "[flowpath] add port\n");
 
   struct fp_port_add_arguments const* args =
     (struct fp_port_add_arguments const*)req->data;
@@ -159,7 +159,7 @@ fp_on_port_add(struct fp_request const* req, struct fp_reply* rep)
 static int
 fp_on_port_del(struct fp_request const* req, struct fp_reply* rep)
 {
-  fprintf(stderr, "[noproto] del port\n");
+  fprintf(stderr, "[flowpath] del port\n");
 
   struct fp_port_del_arguments const* args = 
     (struct fp_port_del_arguments const*)req->data;
@@ -179,7 +179,7 @@ fp_on_port_del(struct fp_request const* req, struct fp_reply* rep)
 static int
 fp_on_port_list(struct fp_request const* req, struct fp_reply* rep)
 {
-  fprintf(stderr, "[noproto] list ports\n");
+  fprintf(stderr, "[flowpath] list ports\n");
   /* Get the port list arguments. */
   struct fp_port_list_arguments const* args = 
     (struct fp_port_list_arguments const*)req->data;
@@ -233,7 +233,7 @@ fp_on_request(struct fp_request const* req, struct fp_reply* rep)
 }
 
 
-/* Read and process an incoming nomg messgae. */
+/* Read and process an incoming flowmgr messgae. */
 int
 fp_mgr_incoming()
 {
@@ -249,9 +249,9 @@ fp_mgr_incoming()
 
   /* Read into the buffer. */
   int inbytes = recv(mgr_, &inbuf, FP_MESSAGE_LEN, 0);
-  fprintf(stderr, "[noproto] message from nomg\n");
+  fprintf(stderr, "[flowpath] message from flowmgr\n");
   if (inbytes < 0) {
-    perror("fp_fp_incoming/recv");
+    perror("fp_incoming/recv");
     return -1;    
   }
 
@@ -268,13 +268,13 @@ fp_mgr_incoming()
   else
     rep->result = FP_BAD_REQUEST;
 
-  fprintf(stderr, "[noproto] finished request (%s)\n", fp_strerror(rep->result));
+  fprintf(stderr, "[flowpath] finished request (%s)\n", fp_strerror(rep->result));
 
   /* Send the reply. 
 
      TODO: We may not  want to send the entire buffer.
      Or do we really care? */
-  fprintf(stderr, "[noproto] sending reply to nomg\n");
+  fprintf(stderr, "[flowpath] sending reply to flowmgr\n");
   int outbytes = send(mgr_, &outbuf, FP_MESSAGE_LEN, 0);
   if (outbytes <= 0) {
     if (outbytes < 0) {

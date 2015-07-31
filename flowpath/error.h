@@ -30,7 +30,7 @@ extern "C" {
 
 
 /* The error type is the same as the result type for the
-   the nomg/noproto communication. When the value is
+   the flowmgr/flowpath communication. When the value is
    negative, this indicates an errno error value. */
 typedef int fp_error_t;
 
@@ -54,7 +54,7 @@ fp_error(fp_error_t e)
 }
 
 
-/* Make the sytsem error e into a noproto error. */
+/* Make the sytsem error e into a flowpath error. */
 static inline fp_error_t 
 fp_system_error(int e)
 {
@@ -63,7 +63,7 @@ fp_system_error(int e)
 }
 
 
-/* Returns a noproto error version of the current
+/* Returns a flowpath error version of the current
    error number. */
 static inline fp_error_t
 fp_get_system_error()

@@ -1,162 +1,32 @@
 
-# nomg
+# Flowmgr
 
-nomg is the [noproto](/) data plane instance manager. Users are able to manage
-data plane instances via [noctl](/noctl)'s CLI. nomg will receive commands in a
-synchronous fashion and process them in the order they are received. Data plane
-instances will run as child processes.
+Flowmgr is the [flowpath](https://github.com/flowgrammable/freeflow/flowpath) data plane instance manager. Users are able to access flowpath data plane instances using a [Flowmgr Client Interface](#client-interface).
 
-FIXME: Most of this is dated... we need to sync the docs with the actual
-implementation.
 
-## Process Management
+## Client Interaces
 
-Since nomg will be managing several data planes, there are necessary bookkeeping
-data structures that must be provided.
+Flowmgr is intended to allow multiple forms of communication for configuration and management of data plane instances. Below is additional information about these interfaces.
 
-### Data Plane Table
+### CLI
 
-A listing of the current data plane instances that are running with their
-associated data. The working form of this table follows.
+[Flowctl](https://github.com/flowgrammable/freeflow/flowctl) allows a user to manipulate data plane instances through flowmgr from the command line using Unix Sockets and JSON style messages. See the flowctl project page for additional information.
 
-|Name | PID | Type | ... |
-|-----|-----|------|-----|
 
-The label for the data plane | The Process (Plane) ID | The data plane
-architecture and application | ...
+### Flowsim
 
-## Port Management
+[Flowsim](https://github.com/flowgrammable/flowsim) is [Flowgrammable's](http://flowgrammable.org) OpenFlow data plane simulator. There are plans to set up communcation channels between Flowmgr and Flowsim to allow for configuration, management, as well as debugging functionality.
 
-In order to supply ports to active data planes, nomg will require a simple table
-to keep track of port assignments.
 
-### Port Table
+## Data Plane 
 
-A table for data plane instance labels and the ports they are using. For now
-each port will occupy one row in the table.
+Flowmgrs main purpose is to configure and manage flowpath data plane instances. Below is additional information about the management and communcation protocols used.
 
-Name | Port
------|-----
+### Management
 
-The label for the data plane | The port number in use
+Since there could possibly be multiple data plane instances running in [flowpath](https://github.com/flowgrammable/freeflow/flowpath) some back end store is needed. Flowmgr uses a simple chained hash table to keep track of data plane instances and their labels. 
 
-## Data Plane Management
 
-nomg will use the working list of functional commands that follow to manage data
-plane instances.
+### Communication
 
-`add-dp <dp name> <dp type>`
-- Creates a new instance of the given data plane type
-```
-nomg_add_dp(name, type){
-    if (name doesn't exist){
-        PID = fork()
-        if child then exec(type)
-        else{
-            update dp_table(name, PID, type)
-            return success;
-        }
-    }
-    return name_not_found_error;
-}
-```
-
-`add-port <dp name> <port>`
-- Adds a port to a current data plane instance with matching name
-```
-nomg_add_port(name, port){
-    if(name exists){
-        if(port isn't being used){
-            add port to data plane(name, port)
-            update port_table(name, port)
-            return success;
-        }
-        else return port_in_use_error;
-    }
-    else return name_not_found_error;
-}
-```
-
-`del-dp <dp name>`
-- Removes the data plane instance with matching name
-```
-nomg_del_dp(name){
-    if(name exists){
-        lookup PID(name)
-        kill PID
-        update dp_table(name)
-        return success;
-    }
-    else return name_not_found_error;
-}
-```
-
-`del-port <dp name> <port>`
-- Removes the port given from the data plane instance with matching name
-```
-nomg_del_port(name, port){
-    if(name exists){
-        if(port is being used by name){
-            remove port from data plane(name)
-            update port_table(name, port)
-            return success;
-        }
-        else return port_not_in_use_error;
-    }
-    else return name_not_found_error;
-}
-```
-
-`list-dps`
-- Lists all active data planes
-```
-nomg_list_dps(void){
-    return dp_table;
-}
-```
-
-`list-ports <dp name>`
-- Lists all ports being used by the data plane instance with matching name
-```
-nomg_list_ports(name){
-    if(name exists){
-        return list of ports used by name;
-    }
-    else return name_not_found_error;
-}
-```
-
-`show-dp <dp name>`
-- Sends a command to the data plane as a query
-```
-nomg_show_dp(name){
-    if(name exists){
-        forward cmd to data plane as query
-        return response;
-    }
-    else return name_not_found_error;
-}
-```
-
-`show-port <dp name> <port>`
-- Sends a command to the data plane as a query
-```
-nomg_show_port(name, port){
-    if(name exists){
-        if(port is being used by name){
-            forward cmd to data plane as query
-            return response;
-        }
-        else return port_not_in_use_error;
-    }
-    else return name_not_found_error;
-}
-```
-
-`nomg load-app <dp name> <app name>`
-
-`nomg unload-app <dp name> <app name>`
-
-`nomg start-app <dp name> <app name>`
-
-`nomg stop-app <dp name> <app name>`
+Flowmgr and [flowpath](https://github.com/flowgrammable/freeflow/flowpath) will also communicate over sockets but use a closed binary interface for relaying messages. The messages map to commands available to the manager for any data plan instance.
