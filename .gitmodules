@@ -4,6 +4,7 @@
 [submodule "dev-machine"]
   path = dev-machine
   url = https://github.com/flowgrammable/dev-machine.git
+  branch = master
 [submodule "contrib/netmap-source"]
-	path = contrib/netmap-source
-	url = https://github.com/flowgrammable/netmap.git
+  path = contrib/netmap-source
+  url = https://github.com/flowgrammable/netmap.git
