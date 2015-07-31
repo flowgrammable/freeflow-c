@@ -4,7 +4,7 @@ include_directories(..)
 
 macro(add_test_driver target)
   add_executable(${target} ${ARGN})
-  target_link_libraries(${target} freeflow-core)
+  target_link_libraries(${target} flowpath-rt)
 endmacro()
 
 
