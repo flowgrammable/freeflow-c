@@ -1,0 +1,1 @@
+sudo nping -c 10 --ether-type 0x0800 --tcp -p 80 --data-length 100 192.168.1.1
