@@ -1,7 +1,7 @@
 #include "arrival.h" // also includes types.h
 #include "dataplane.h" // also includes types.h and util.h
 #include "departure.h"
-#include "packet.h" // contains np_context, np_packet and also includes types.h
+#include "packet.h" // contains fp_context, fp_packet and also includes types.h
 #include "instruction.h" // don't think I need this in here
 #include "port.h" // also includes util.h
 

@@ -63,7 +63,7 @@ set_request(Io_handler& io, json::Map const& map)
 {
   // char buf[FP_MESSAGE_LEN];
   // fp_request* req = fp_set_dataplane_state(buf, state);
-  // return noproto_channel()->on_request(req);
+  // return freeflow_channel()->on_request(req);
 }
 
 

@@ -7,13 +7,13 @@
 set(port_src port_udp.c)
 if(FREEFLOW_USE_NETMAP)
   list(APPEND port_src port_netmap.c)
-  add_definitions(-DNP_USE_NETMAP)
+  add_definitions(-DFP_USE_NETMAP)
 elseif(FREEFLOW_USE_NADK)
   list(APPEND port_src port_nadk.c)
-  add_definitions(-DNP_USE_NADK)
+  add_definitions(-DFP_USE_NADK)
 elseif(FREEFLOW_USE_PCAP)
   list(APPEND port_src port_pcap.c)
-  add_definitions(-DNP_USE_PCAP)
+  add_definitions(-DFP_USE_PCAP)
 endif()
 
 
@@ -70,15 +70,15 @@ endif()
 set_target_properties(flowpath-rt PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 
 
-# Noproto executables
+# Flowpath executables
 add_executable(flowpath main.c)
 target_link_libraries(flowpath flowpath-rt)
 
 
 # Hand-coded pipeline modules.
-# add_subdirectory(pipelines)
+add_subdirectory(pipelines)
 
 
 # Testing
-# add_subdirectory(tests)
+add_subdirectory(tests)
 

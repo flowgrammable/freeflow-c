@@ -13,21 +13,21 @@ main(int argc, char** argv)
     return -1;
   }
 
-  np_error_t err = NP_OK;
+  fp_error_t err = FP_OK;
 
   /* Create the UDP socket. */
-  struct np_device* dev = np_udp_open(argv[1], &err);
+  struct fp_device* dev = fp_udp_open(argv[1], &err);
   if (!dev)
     return -1;
 
   /* Build a port on the socket. */
-  struct np_port* port = np_port_create(dev);
+  struct fp_port* port = fp_port_create(dev);
 
   /* Recieve a packet and then stop. */
-  struct np_packet* pkt = np_port_recv_packet(port);
+  struct fp_packet* pkt = fp_port_recv_packet(port);
   printf("* got %d bytes\n", pkt->size);
-  np_port_drop_packet(port, pkt);
+  fp_port_drop_packet(port, pkt);
 
   /* Clean up. */
-  np_port_delete(port);
+  fp_port_delete(port);
 }

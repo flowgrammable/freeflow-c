@@ -1,5 +1,5 @@
-#ifndef NOPROTO_STAGE_UTIL_H
-#define NOPROTO_STAGE_UTIL_H
+#ifndef FLOWPATH_STAGE_UTIL_H
+#define FLOWPATH_STAGE_UTIL_H
 
 #include <stdint.h>
 #include <stdbool.h>

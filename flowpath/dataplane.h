@@ -38,7 +38,7 @@ struct fp_tables
 
 
 /* Processing state for the dataplane. */
-#define NP_DATAPLANE_UP 0x01
+#define FP_DATAPLANE_UP 0x01
 
 
 /* A dataplane object. */
@@ -78,7 +78,7 @@ fp_error_t fp_dataplane_stop(struct fp_dataplane*);
 static inline bool
 fp_dataplane_is_up(struct fp_dataplane const* dp)
 {
-  return dp->state & NP_DATAPLANE_UP;
+  return dp->state & FP_DATAPLANE_UP;
 }
 
 
@@ -87,7 +87,7 @@ fp_dataplane_is_up(struct fp_dataplane const* dp)
 static inline void
 fp_dataplane_up(struct fp_dataplane* dp)
 {
-  dp->state |= NP_DATAPLANE_UP;
+  dp->state |= FP_DATAPLANE_UP;
 }
 
 
@@ -96,7 +96,7 @@ fp_dataplane_up(struct fp_dataplane* dp)
 static inline void
 fp_dataplane_down(struct fp_dataplane* dp)
 {
-  dp->state &= ~NP_DATAPLANE_UP;
+  dp->state &= ~FP_DATAPLANE_UP;
 }
 
 

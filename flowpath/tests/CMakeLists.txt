@@ -22,7 +22,7 @@ add_test_driver(test-util-ring test-util-ring.c)
 
 
 # Build a simple NADK test driver.
-if (FLOWPATH_USE_NADK)
+if (FREEFLOW_USE_NADK)
   add_test_driver(test-nadk test-nadk.c)
 endif()
 

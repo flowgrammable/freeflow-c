@@ -5,6 +5,7 @@
 #include "port_nadk.h"
 
 #include "proto.h"
+#include "error.h"
 
 #include <stdio.h>
 #include <signal.h>
@@ -155,7 +156,7 @@ main(int argc, char** argv)
   fp_error_t err;
   struct fp_dataplane* dp = fp_dataplane_create(name, path, &err);
   if (fp_error(err)) {
-    fprintf(stderr, "error: %s\n", dpmp_strerror(err));
+    fprintf(stderr, "error: %s\n", fp_strerror(err));
     return -1;
   }
 

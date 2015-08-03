@@ -1,12 +1,12 @@
-#ifndef NOPROTO_STAGE_KEY_H
-#define NOPROTO_STAGE_KEY_H
+#ifndef FLOWPATH_STAGE_KEY_H
+#define FLOWPATH_STAGE_KEY_H
 
-#include "types.h" // For: np_base_key_t
+#include "types.h" // For: fp_base_key_t
 
-typedef  struct np_key {
-	struct np_base_key base;
+typedef  struct fp_key {
+	struct fp_base_key base;
 	// currently, no additional fields...
-} np_key_t;
+} fp_key_t;
 
-#endif /* NOPROTO_KEY_H */
+#endif /* FLOWPATH_KEY_H */
 

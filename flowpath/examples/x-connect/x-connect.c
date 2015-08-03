@@ -24,7 +24,7 @@ static bool LittleEndian;
 // Arguments:
 // - dp: pointer to dataplane configuration object
 // - s: pointer to stage itself
-void nps_exec(struct np_dataplane* dp, struct np_context* ctx) {
+void nps_exec(struct fp_dataplane* dp, struct fp_context* ctx) {
 	// Ensure Context is valid:
 	if (ctx == NULL) {
 #ifdef DEBUG
@@ -43,7 +43,7 @@ void nps_exec(struct np_dataplane* dp, struct np_context* ctx) {
 #ifdef DEBUG
 		printf("WARNING: xConnect input logical port != {0,1}!\n");
 #endif
-		ctx->out_port = NP_PORT_DROP;  // a better drop mechanism would be nice
+		ctx->out_port = FP_PORT_DROP;  // a better drop mechanism would be nice
 	}
 }
 

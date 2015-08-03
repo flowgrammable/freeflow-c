@@ -8,16 +8,16 @@
 
 /* Table of error messages corresponding to error codes. */
 static char const* errors[] = {
-  "Success",                      /* NP_OK */
-  "Unknown error",                /* NP_ERROR */
-  "Bad request type",             /* NP_BAD_REQUEST */
-  "Bad reply type",               /* NP_BAD_REPLY */
-  "Bad operation",                /* NP_BAD_OPERATION */
-  "Bad data plane",               /* NP_BAD_DATAPLANE */
-  "Data plane already exists",    /* NP_DATAPLANE_EXISTS */
-  "Too many data planes",         /* NP_DATAPLANE_LIMIT_EXCEEED */
-  "Cannot load pipeline",         /* NP_BAD_PIPELINE */
-  "Cannot load pipeline symbols", /* NP_BAD_PIPELINE_MODULE */
+  "Success",                      /* FP_OK */
+  "Unknown error",                /* FP_ERROR */
+  "Bad request type",             /* FP_BAD_REQUEST */
+  "Bad reply type",               /* FP_BAD_REPLY */
+  "Bad operation",                /* FP_BAD_OPERATION */
+  "Bad data plane",               /* FP_BAD_DATAPLANE */
+  "Data plane already exists",    /* FP_DATAPLANE_EXISTS */
+  "Too many data planes",         /* FP_DATAPLANE_LIMIT_EXCEEED */
+  "Cannot load pipeline",         /* FP_BAD_PIPELINE */
+  "Cannot load pipeline symbols", /* FP_BAD_PIPELINE_MODULE */
 };
 
 

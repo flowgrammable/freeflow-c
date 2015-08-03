@@ -123,7 +123,7 @@ parse_search_path(std::string const& str)
 bool
 parse_environment_options()
 {
-  if (char const* path = std::getenv("NOPROTO_MODULE_PATH"))
+  if (char const* path = std::getenv("FREEFLOW_MODULE_PATH"))
     cfg.module_path = parse_search_path(path);
   return true;
 }
