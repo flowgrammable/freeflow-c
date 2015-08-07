@@ -109,3 +109,6 @@ add_subdirectory(freeflow)
 add_subdirectory(flowpath)
 add_subdirectory(flowmgr)
 add_subdirectory(flowctl)
+
+# Traffic generator
+add_subdirectory(traffic-gen)
