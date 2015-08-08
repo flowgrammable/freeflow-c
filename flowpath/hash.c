@@ -129,7 +129,23 @@ hash_index(struct fp_chained_hash_table const* t, uintptr_t k)
 }
 
 
-/* Allocate a new separately chained hash table with thes
+/* Allocate a new basic hash table with the specified capacity
+   as well as the hashing and equality comparison functions. */
+struct fp_basic_hash_table*
+fp_basic_hash_table_new(size_t buckets, fp_hash_fn hash, fp_compare_fn comp)
+{
+  struct fp_basic_hash_table* t = fp_allocate(struct fp_basic_hash_table);
+  t->size = 0;
+  t->buckets = buckets;
+  t->hash = hash;
+  t->comp = comp;
+  t->data = fp_allocate_n(struct fp_basic_hash_entry*, buckets);
+  memset(t->data, 0, sizeof(struct fp_basic_hash_entry*) * buckets);
+  return t;
+}
+
+
+/* Allocate a new separately chained hash table with the
    specified number buckets (which should be a prime number),
    and the given hash and equality comparison functions. */
 struct fp_chained_hash_table*
@@ -143,6 +159,18 @@ fp_chained_hash_table_new(size_t buckets, fp_hash_fn hash, fp_compare_fn comp)
   t->data = fp_allocate_n(struct fp_chained_hash_entry*, buckets);
   memset(t->data, 0, sizeof(struct fp_chained_hash_entry*) * buckets);
   return t;
+}
+
+
+/* Delete a separately basic hash table. This function is
+   not responsible for deleting the contents of the table. */
+void
+fp_basic_hash_table_delete(struct fp_basic_hash_table* t)
+{
+  if (!t)
+    return;
+  fp_deallocate(t->data);
+  fp_deallocate(t);
 }
 
 
@@ -160,9 +188,29 @@ fp_chained_hash_table_delete(struct fp_chained_hash_table* t)
 
 /* Returns the load factor for the table. */
 double
+fp_basic_hash_table_load(struct fp_basic_hash_table const* t)
+{
+  return (double)t->buckets / (double)t->size;
+}
+
+
+/* Returns the load factor for the table. */
+double
 fp_chained_hash_table_load(struct fp_chained_hash_table const* t)
 {
   return (double)t->buckets / (double)t->size;
+}
+
+
+/* Search for the given key within the hash table. This returns
+   a pointer to the mapped value if the key exists in the
+   table, or NULL if it does not. */
+struct fp_basic_hash_entry*
+fp_basic_hash_table_find(struct fp_basic_hash_table const* t, uintptr_t k)
+{
+  int n = hash_index(t, k);
+  struct fp_basic_hash_entry* p = t->data[n];
+  return p;
 }
 
 
@@ -186,7 +234,19 @@ fp_chained_hash_table_find(struct fp_chained_hash_table const* t, uintptr_t k)
 }
 
 
-/* Allocate a new hash entry. */
+/* Allocate a new basic hash entry. */
+static struct fp_basic_hash_entry*
+fp_basic_hash_entry_new(uintptr_t k, uintptr_t v)
+{
+  struct fp_basic_hash_entry* ent = fp_allocate(struct fp_basic_hash_entry);
+  ent->key = k;
+  ent->value = v;
+  ent->next = NULL;
+  return ent;
+}
+
+
+/* Allocate a new chained hash entry. */
 static struct fp_chained_hash_entry*
 fp_chained_hash_entry_new(uintptr_t k, uintptr_t v)
 {
@@ -195,6 +255,15 @@ fp_chained_hash_entry_new(uintptr_t k, uintptr_t v)
   ent->value = v;
   ent->next = NULL;
   return ent;
+}
+
+
+/* Deallocate a basic hash entry. This does not release
+   memory associated with the key or value.  */
+static void
+fp_basic_hash_entry_delete(struct fp_basic_hash_entry* ent)
+{
+  fp_deallocate(ent);
 }
 
 
@@ -221,7 +290,36 @@ fp_chained_hash_entry_insert(struct fp_chained_hash_entry** head,
 }
 
 
-/* Resize the hash table. If the hash table is maximally
+/* Resize the basic hash table. If the hash table is maximally
+   sized, no action is taken. */
+void
+fp_basic_hash_table_resize(struct fp_basic_hash_table* t1)
+{
+  size_t n = next_prime(t1->buckets);
+  if (n == 0)
+    return;
+
+  /* Build a new hash table and all kv pairs of t into
+     the new table. */
+  struct fp_basic_hash_table* t2 = fp_basic_hash_table_new(n, t1->hash, t1->comp);
+  for (int i = 0; i < t1->buckets; ++i) {
+    struct fp_basic_hash_entry* p = t1->data[i];
+    while (p) {
+      fp_basic_hash_table_insert(t2, p->key, p->value);
+      p = p->next;
+    }
+  }
+
+  /* Move the essential information from t2 into t1 and get 
+     rid of the temporary hash table. */
+  fp_deallocate(t1->data);
+  t1->buckets = n;
+  t1->data = t2->data;
+  fp_deallocate(t2);
+}
+
+
+/* Resize the chained hash table. If the hash table is maximally
    sized, no action is taken. */
 void
 fp_chained_hash_table_resize(struct fp_chained_hash_table* t1)
@@ -250,7 +348,29 @@ fp_chained_hash_table_resize(struct fp_chained_hash_table* t1)
 }
 
 
-/* Insert the the given key/value pair into the hash table,
+/* Insert the the given key/value pair into the basic hash table,
+   returning a pointer to the inserted value structure.
+
+   TODO: Implement dynamic resize, rehash. */
+struct fp_basic_hash_entry*
+fp_basic_hash_table_insert(struct fp_basic_hash_table* t, 
+                             uintptr_t k, 
+                             uintptr_t v)
+{
+  /* Resize if we hit the high-water mark. */
+  if (fp_basic_hash_table_load(t) >= .75)
+    fp_basic_hash_table_resize(t);
+
+  int n = hash_index(t, k);
+  ++t->size;
+  if (!t->data[n])
+    return t->data[n] = fp_basic_hash_entry_new(k, v);
+  else
+    return fp_basic_hash_entry_insert(&t->data[n], k, v);
+}
+
+
+/* Insert the the given key/value pair into the chained hash table,
    returning a pointer to the inserted value structure.
 
    TODO: Implement dynamic resize, rehash. */
@@ -272,7 +392,38 @@ fp_chained_hash_table_insert(struct fp_chained_hash_table* t,
 }
 
 
-/* Remove the key from the table.  */
+/* Remove the key from the basic hash table.  */
+void 
+fp_basic_hash_table_remove(struct fp_basic_hash_table* t, uintptr_t k)
+{
+  int n = hash_index(t, k);
+  struct fp_basic_hash_entry* p = t->data[n];
+
+  /* Find the first instance of the key to remove. */
+  struct fp_basic_hash_entry* q = NULL;
+  while (p && !t->comp(p->key, k)) {
+    q = p;
+    p = p->next;
+  }
+
+  /* The key does not exist. Do nothing. */
+  if (!p)
+    return;
+
+  /* Stitch around the node being removed, possibly
+     making a new head for the bucket. */
+  if (q)
+    q->next = p->next;
+  else
+    t->data[n] = p->next;
+  --t->size;
+
+  /* Reclaim memory. */
+  fp_basic_hash_entry_delete(p);
+}
+
+
+/* Remove the key from the chained hash table.  */
 void 
 fp_chained_hash_table_remove(struct fp_chained_hash_table* t, uintptr_t k)
 {
