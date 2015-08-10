@@ -68,6 +68,7 @@ endif()
 #  recompile with -fPIC
 # See http://www.cmake.org/pipermail/cmake/2007-May/014350.html
 set_target_properties(flowpath-rt PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+set_target_properties(flowpath-common PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 
 
 # Flowpath executables
