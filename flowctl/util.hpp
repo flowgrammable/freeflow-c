@@ -55,7 +55,7 @@ using Path_list = std::vector<std::string>;
 struct Config
 {
   // The path to the flowctl socket.
-  std::string socket  = "/tmp/flowctl-socket";
+  std::string socket  = "/tmp/control-socket";
 
   // The path s
   Path_list   module_path;  // Search path for pipeline modules
