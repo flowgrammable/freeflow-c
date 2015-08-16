@@ -22,7 +22,7 @@ static int mgr_;
 
 
 /* FIXME: Make this configurable. */
-static const char* mgr_socket_ = "/tmp/flowpath-socket";
+static const char* mgr_socket_ = "/tmp/switch-socket";
 
 
 /* Open a connection to the flowmgr manager channel. Returns
