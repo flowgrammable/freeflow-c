@@ -52,8 +52,12 @@ struct fp_context;
 #define FP_PORT_ANY        0xffffffff
 
 
+/* Master table of ports. */
+static struct fp_chained_hash_table* ports_;
+
 struct fp_device;
 struct fp_port;
+
 
 
 /* Types of function pointers for ports. */

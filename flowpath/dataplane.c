@@ -147,7 +147,11 @@ fp_dataplane_add_port(struct fp_dataplane* dp, struct fp_port* port, fp_error_t*
 {
   /* TODO: Can insertion ever fail? */
   struct fp_chained_hash_table* t = dp->ports.table;
+  
+  /* Add the port to the data planes port table. */
   fp_chained_hash_table_insert(t, port->id, (uintptr_t)port);
+
+  /* Add the port to the pipeline. */
   *err = dp->pipeline->add_port(dp, port);
 }
 

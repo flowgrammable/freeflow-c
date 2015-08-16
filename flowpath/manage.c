@@ -73,8 +73,7 @@ fp_on_dataplane_add(struct fp_request const* req, struct fp_reply* rep)
 
   struct fp_dataplane_add_arguments const* args = 
     (struct fp_dataplane_add_arguments const*)req->data;
-  
-
+           
   if (fp_dataplane_lookup(args->name))
     rep->result = FP_DATAPLANE_EXISTS;
   else
@@ -136,7 +135,7 @@ fp_on_port_add(struct fp_request const* req, struct fp_reply* rep)
 
     /* Check for device creation errors. */
     if (fp_error(derr)) {
-      fprintf(stderr, "error: %s\n", fp_strerror(derr));
+      fprintf(stderr, "device error: %s\n", fp_strerror(derr));
       return -1;
     }
     
@@ -144,7 +143,7 @@ fp_on_port_add(struct fp_request const* req, struct fp_reply* rep)
     struct fp_port* port = fp_port_create(dev);
     fp_dataplane_add_port(dp, port, &rep->result);
     if (fp_error(rep->result)) {
-      fprintf(stderr, "error: %s\n", fp_strerror(rep->result));
+      fprintf(stderr, "port error: %s\n", fp_strerror(rep->result));
       return -1;
     }
   }

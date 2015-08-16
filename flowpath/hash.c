@@ -272,6 +272,17 @@ fp_chained_hash_table_insert(struct fp_chained_hash_table* t,
 }
 
 
+/* Update the key with a new value. */
+void
+fp_chained_hash_table_update(struct fp_chained_hash_table* t, uintptr_t k, uintptr_t v)
+{
+  int n = hash_index(t, k);
+  struct fp_chained_hash_entry* ent = t->data[n];
+  if (ent)
+    ent->value = v;
+}
+
+
 /* Remove the key from the table.  */
 void 
 fp_chained_hash_table_remove(struct fp_chained_hash_table* t, uintptr_t k)

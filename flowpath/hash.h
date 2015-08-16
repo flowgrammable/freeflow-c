@@ -72,6 +72,7 @@ double                        fp_chained_hash_table_load(struct fp_chained_hash_
 struct fp_chained_hash_entry* fp_chained_hash_table_find(struct fp_chained_hash_table const*, uintptr_t);
 struct fp_chained_hash_entry* fp_chained_hash_table_insert(struct fp_chained_hash_table*, uintptr_t, uintptr_t);
 void                          fp_chained_hash_table_remove(struct fp_chained_hash_table*, uintptr_t);
+void                          fp_chained_hash_table_update(struct fp_chained_hash_table*, uintptr_t, uintptr_t);
 
 /* Hashing functions. */
 size_t fp_pointer_hash(uintptr_t);
